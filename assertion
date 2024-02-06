@@ -5,6 +5,14 @@ rx_axis_tfirst
 rx_axis_tlast
 rx_axis_tready
 
+// Assertion to check that data changes are accepted only on the first occurrence of both tvalid and tready being high
+assert property (
+    @(posedge clk) disable iff (!rst_n)
+    (rx_axis_tvalid && rx_axis_tready && !$past(rx_axis_tvalid && rx_axis_tready)) |-> $changed(rx_axis_tdata)
+);
+
+
+
 // Assertion for tvalid being asserted only when tready is asserted
 assert property (
     @(posedge clk) disable iff (!rst_n) 
