@@ -1,0 +1,38 @@
+x_axis_tdata
+rx_axis_tkeep
+rx_axis_tvalid
+rx_axis_tfirst
+rx_axis_tlast
+rx_axis_tready
+
+// Assertion for tvalid being asserted only when tready is asserted
+assert property (
+    @(posedge clk) disable iff (!rst_n) 
+    (rx_axis_tready || !rx_axis_tvalid)
+);
+
+// Assertion for tready being asserted only when tvalid is asserted
+assert property (
+    @(posedge clk) disable iff (!rst_n) 
+    (rx_axis_tvalid || !rx_axis_tready)
+);
+
+// Assertion for tlast being asserted when tvalid and tready are both asserted
+assert property (
+    @(posedge clk) disable iff (!rst_n) 
+    (rx_axis_tvalid && rx_axis_tready) |-> $stable(rx_axis_tlast)
+);
+
+// Assertion for tfirst being asserted when tvalid and tready are both asserted
+assert property (
+    @(posedge clk) disable iff (!rst_n) 
+    (rx_axis_tvalid && rx_axis_tready) |-> $stable(rx_axis_tfirst)
+);
+
+// Assertion for tkeep to be stable when tvalid is asserted
+assert property (
+    @(posedge clk) disable iff (!rst_n) 
+    (rx_axis_tvalid) |-> $stable(rx_axis_tkeep)
+);
+
+// Additional assertions specific to your design requirements can be added here
